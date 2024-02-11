@@ -9,6 +9,7 @@ import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
+import org.eclipse.microprofile.faulttolerance.Fallback
 import org.eclipse.microprofile.rest.client.inject.RestClient
 
 @Path("/tvserie")
@@ -26,15 +27,20 @@ class TvSerieController {
     @PostConstruct
     fun init() {
         for (i in 1..10) {
-            val serie = tvSeriesProxy.getTvSerie(i)
-            serie.episodes = episodesProxy.getEpisodes(i)
-            tvSeries.add(serie)
+            try {
+                val serie = tvSeriesProxy.getTvSerie(i)
+                serie.episodes = episodesProxy.getEpisodes(i)
+                tvSeries.add(serie)
+            } catch (e: Exception) {
+                fallBackGet()
+            }
         }
     }
 
     @GET
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
+    @Fallback(fallbackMethod = "fallBackGet")
     fun getAllTvSeries(): Response {
         return Response.ok(tvSeries).build()
     }
@@ -62,4 +68,6 @@ class TvSerieController {
             Response.ok(it).build()
         } ?: Response.status(Response.Status.NOT_FOUND).build()
     }
+
+    private fun fallBackGet() = Response.ok(ArrayList<Any>()).build()
 }
