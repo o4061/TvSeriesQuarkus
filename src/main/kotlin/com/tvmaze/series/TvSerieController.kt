@@ -9,7 +9,10 @@ import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
+import org.eclipse.microprofile.faulttolerance.CircuitBreaker
 import org.eclipse.microprofile.faulttolerance.Fallback
+import org.eclipse.microprofile.faulttolerance.Retry
+import org.eclipse.microprofile.faulttolerance.Timeout
 import org.eclipse.microprofile.rest.client.inject.RestClient
 
 @Path("/tvserie")
@@ -41,6 +44,14 @@ class TvSerieController {
     @Path("/all")
     @Produces(MediaType.APPLICATION_JSON)
     @Fallback(fallbackMethod = "fallBackGet")
+    @Timeout(2000)
+    @CircuitBreaker(
+        requestVolumeThreshold = 4,
+        failureRatio = 0.5,
+        delay = 4000,
+        successThreshold = 2
+    )
+    @Retry(maxRetries = 4)
     fun getAllTvSeries(): Response {
         return Response.ok(tvSeries).build()
     }
