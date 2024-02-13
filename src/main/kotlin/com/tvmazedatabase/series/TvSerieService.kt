@@ -16,6 +16,10 @@ class TvSerieService {
         return tvSerieRepository.findAll().list<TvSerie?>().sortedBy { it.id }
     }
 
+    fun findById(id: Int): TvSerie? {
+        return tvSerieRepository.findById(id)
+    }
+
     fun saveTvSerie(cvSerie: TvSerie) {
         tvSerieRepository.persist(cvSerie)
     }

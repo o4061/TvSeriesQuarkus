@@ -1,5 +1,6 @@
 package com.tvmazedatabase.series.model
 
+import com.tvmazedatabase.episodes.model.Episode
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase
 import jakarta.persistence.*
 
@@ -11,7 +12,7 @@ class TvSerie : PanacheEntityBase() {
     var ended: String? = ""
     var status: String = ""
 
-    @Column(length = 8192)
+    @Column(length = 2048)
     var summary: String = ""
     var type: String = ""
     var updated: Int = 0
@@ -20,7 +21,6 @@ class TvSerie : PanacheEntityBase() {
     var language: String = ""
     var name: String = ""
 
-    @Column(length = 1024)
     var officialSite: String? = ""
     var premiered: String = ""
     var runtime: Int = 0
@@ -39,4 +39,7 @@ class TvSerie : PanacheEntityBase() {
 
     @Embedded
     var schedule: Schedule? = null
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    var episodes: List<Episode>? = mutableListOf()
 }

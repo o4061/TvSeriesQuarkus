@@ -1,5 +1,6 @@
 package com.tvmazedatabase.episodes
 
+import com.tvmazedatabase.episodes.model.Episode
 import jakarta.ws.rs.GET
 import jakarta.ws.rs.Path
 import jakarta.ws.rs.PathParam
@@ -12,5 +13,5 @@ interface EpisodesProxy {
 
     @GET
     @Path("/shows/{id}/episodes")
-    fun getEpisodes(@PathParam("id") id: Int): Episodes
+    fun getEpisodes(@PathParam("id") id: Int): ArrayList<Episode>
 }
