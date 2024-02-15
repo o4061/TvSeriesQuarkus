@@ -8,10 +8,12 @@ import org.eclipse.microprofile.openapi.annotations.media.Content
 import org.eclipse.microprofile.openapi.annotations.media.Schema
 import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse
+import org.jboss.logging.Logger
 
 @Path("/movies")
 class MovieController {
 
+    private val logger = Logger.getLogger(MovieController::class.simpleName)
     private var movies = ArrayList<Movie>()
 
     @GET
@@ -26,6 +28,7 @@ class MovieController {
         content = [Content(mediaType = MediaType.APPLICATION_JSON)]
     )
     fun getMovies(): Response {
+        logger.info("Get all movies inside the database")
         return Response.ok(movies).build()
     }
 
@@ -33,6 +36,7 @@ class MovieController {
     @Produces(MediaType.TEXT_PLAIN)
     @Path("/size")
     fun countMovies(): Int {
+        logger.info("Get all movies size inside the database")
         return movies.size
     }
 
@@ -58,6 +62,7 @@ class MovieController {
         newMovie: Movie
     ): Response {
         movies.add(newMovie)
+        logger.info("Create new movie")
         return Response.status(Response.Status.CREATED).entity(movies).build()
     }
 
@@ -70,6 +75,7 @@ class MovieController {
         @PathParam("title") title: String,
     ): Response {
         movies.first { it.id == id }.title = title
+        logger.info("Update movie with id $id")
         return Response.ok(movies).build()
     }
 
@@ -88,6 +94,7 @@ class MovieController {
     )
     fun deleteMovie(@PathParam("id") id: Long): Response {
         val removed = movies.removeIf { it.id == id }
+        logger.info("Delete movie with id $id")
         return if (removed) Response.noContent().build() else Response.status(Response.Status.BAD_REQUEST).build()
     }
 
