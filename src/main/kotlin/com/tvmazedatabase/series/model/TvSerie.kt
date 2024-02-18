@@ -35,6 +35,9 @@ class TvSerie : PanacheEntityBase() {
     var image: Image? = null
 
     @Embedded
+    var rating: Rating? = null
+
+    @Embedded
     var network: Network? = null
 
     @Embedded

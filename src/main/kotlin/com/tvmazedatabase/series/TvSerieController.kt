@@ -1,7 +1,5 @@
 package com.tvmazedatabase.series
 
-import com.tvmazedatabase.episodes.EpisodesProxy
-import jakarta.annotation.PostConstruct
 import jakarta.inject.Inject
 import jakarta.transaction.Transactional
 import jakarta.ws.rs.GET
@@ -10,35 +8,12 @@ import jakarta.ws.rs.PathParam
 import jakarta.ws.rs.Produces
 import jakarta.ws.rs.core.MediaType
 import jakarta.ws.rs.core.Response
-import org.eclipse.microprofile.rest.client.inject.RestClient
 
 @Path("/v2/tvserie")
 class TvSerieController {
 
     @Inject
-    @RestClient
-    lateinit var tvSeriesProxy: TvSeriesProxy
-
-    @Inject
     lateinit var tvSerieService: TvSerieService
-
-    @Inject
-    @RestClient
-    lateinit var episodesProxy: EpisodesProxy
-
-    @PostConstruct
-    @Transactional
-    fun init() {
-        for (i in 1..10) {
-            try {
-                val serie = tvSeriesProxy.getTvSerie(i)
-                serie.episodes = episodesProxy.getEpisodes(i)
-                tvSerieService.saveTvSerie(serie)
-            } catch (e: Exception) {
-                fallBackGet()
-            }
-        }
-    }
 
     @GET
     @Path("all")
@@ -71,6 +46,4 @@ class TvSerieController {
         }
         return Response.status(Response.Status.NOT_FOUND).build()
     }
-
-    private fun fallBackGet() = Response.ok(ArrayList<Any>()).build()
 }

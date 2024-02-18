@@ -23,4 +23,8 @@ class TvSerieService {
     fun saveTvSerie(cvSerie: TvSerie) {
         tvSerieRepository.persist(cvSerie)
     }
+
+    fun countTvSerie(): Long {
+        return tvSerieRepository.count()
+    }
 }
